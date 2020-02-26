@@ -42,7 +42,7 @@
       <!-- content -->
       <tr :key="idx" v-for="(el,idx) in savedAuthor">
         <td>
-          <a class="font-weight-bold" :href="el.blogUrl">{{el.name}}</a>
+          <a target="_blank" class="font-weight-bold" :href="el.blogUrl">{{el.name}}</a>
         </td>
         <td>
           <ul>
@@ -297,7 +297,9 @@ th,
 td {
   padding: 10px;
 }
-
+table th {
+  vertical-align: middle;
+}
 table ul {
   list-style-type: none;
   padding: 0;
