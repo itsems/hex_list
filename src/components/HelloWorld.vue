@@ -1,32 +1,37 @@
 <template>
   <div class="container">
     <h1>w3HexSchool 鼠年全馬鐵人挑戰</h1>
-    <a
-      class="d-block mt-5 mb-3"
-      href="https://www.hexschool.com/2019/11/14/2019-11-14-w3Hexschool-2020-challenge/"
-      target="_blank"
-    >
-      <img
-        class="img-fluid"
-        src="https://firebasestorage.googleapis.com/v0/b/hexschool-api.appspot.com/o/blog%2F2019%2F11%2Fw3HS%E9%90%B5%E4%BA%BA%E8%B3%BDbanner.png?alt=media&token=3f0ef8fd-6285-47ac-a159-83ff3fb3972e"
-        alt
-      />
-    </a>
+    <h2>文章查詢及追蹤收藏作者</h2>
 
-    <a class="d-block mb-5" href="https://forms.gle/MvufZiucPir4yhHb6" target="_blank">報名與投稿表單連結</a>
+    <img
+      class="img-fluid my-3"
+      src="https://firebasestorage.googleapis.com/v0/b/hexschool-api.appspot.com/o/blog%2F2019%2F11%2Fw3HS%E9%90%B5%E4%BA%BA%E8%B3%BDbanner.png?alt=media&token=3f0ef8fd-6285-47ac-a159-83ff3fb3972e"
+      alt
+    />
+
+    <ul class="text-left">
+      <li>
+        <a href="https://www.hexschool.com/2019/11/14/2019-11-14-w3Hexschool-2020-challenge/">活動連結</a>
+      </li>
+      <li>
+        <a class="d-block mb-5" href="https://forms.gle/MvufZiucPir4yhHb6" target="_blank">報名與投稿表單連結</a>
+      </li>
+    </ul>
+
+    <br />
 
     <!-- 收藏table -->
-    <h3>收藏的作者：</h3>
-    <table class="table table-bordered table-hover">
+    <h3>收藏的作者</h3>
+    <table class="table table-bordered table-hover mt-3 mb-5">
       <!-- th -->
       <tr class="thead-light">
         <th width="150">Name</th>
         <th>Blog List</th>
-        <th width="90">
+        <th width="70">
           本周
           <br />更新
         </th>
-        <th width="90">
+        <th width="70">
           取消
           <br />追蹤
         </th>
@@ -34,7 +39,7 @@
       <!-- content -->
       <tr :key="idx" v-for="(el,idx) in savedAuthor">
         <td>
-          <a :href="el.blogUrl">{{el.name}}</a>
+          <a class="font-weight-bold" :href="el.blogUrl">{{el.name}}</a>
         </td>
         <td>
           <ul>
@@ -56,7 +61,8 @@
     </table>
 
     <!-- Query Table -->
-    <table class="table table-bordered text-center">
+    <h3>搜尋</h3>
+    <table class="table table-bordered text-center mt-3">
       <tr class="thead-light">
         <th>
           <p>搜尋作者 : {{searchAuthor}}</p>
@@ -92,9 +98,9 @@
     </table>
 
     <br />
-
+    <h3>文章總表</h3>
     <!-- Result Table -->
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover mt-3">
       <tr class="thead-light">
         <th width="150">Name</th>
         <th>Blog List</th>
@@ -219,7 +225,6 @@ export default {
     GetThisWeek() {
       var d = new Date();
       var nowday = d.getDay();
-      var re = 7 - nowday;
 
       let first = new Date(d.setDate(d.getDate() - nowday + 1)),
         f_month = "" + (first.getMonth() + 1),
@@ -228,20 +233,10 @@ export default {
       let FormattedFirstDay = [f_year, f_month, f_day].join("-");
       let newFirstDay = new Date(FormattedFirstDay);
 
-      let last = new Date(d.setDate(d.getDate() + re + 1)),
-        l_month = "" + (last.getMonth() + 1),
-        l_day = "" + last.getDate(),
-        l_year = last.getFullYear();
-      let FormattedLastDay = [l_year, l_month, l_day].join("-");
-      let newLastDay = new Date(FormattedLastDay);
-
       for (var i = 0; i < this.savedAuthor.length; i++) {
         var zz = new Date(this.savedAuthor[i].updateTime.split(" ")[0]);
-        if (zz >= newFirstDay && zz <= newLastDay) {
-          this.savedAuthor[i].updated = true;
-        } else {
-          this.savedAuthor[i].updated = false;
-        }
+        if (zz >= newFirstDay) this.savedAuthor[i].updated = true;
+        else this.savedAuthor[i].updated = false;
       }
     },
     reverseIt() {
@@ -301,10 +296,9 @@ td {
   padding: 10px;
 }
 
-ul {
+table ul {
   list-style-type: none;
   padding: 0;
-  /* margin-left: 15px; */
 }
 li {
   margin-bottom: 10px;
@@ -329,7 +323,6 @@ p {
 }
 footer {
   background-color: #eee;
-  /* padding-top: 100px; */
   margin-top: 100px;
   padding: 15px 0;
 }
