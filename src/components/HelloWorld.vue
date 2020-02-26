@@ -163,8 +163,7 @@ export default {
       anotherData: [],
       type: "",
       reverse: false,
-      savedAuthor: [],
-      thisWeek: ""
+      savedAuthor: []
     };
   },
   created() {
