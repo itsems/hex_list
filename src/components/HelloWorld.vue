@@ -11,10 +11,13 @@
 
     <ul class="text-left">
       <li>
-        <a href="https://www.hexschool.com/2019/11/14/2019-11-14-w3Hexschool-2020-challenge/">活動連結</a>
+        <a
+          target="_blank"
+          href="https://www.hexschool.com/2019/11/14/2019-11-14-w3Hexschool-2020-challenge/"
+        >活動連結</a>
       </li>
       <li>
-        <a class="d-block mb-5" href="https://forms.gle/MvufZiucPir4yhHb6" target="_blank">報名與投稿表單連結</a>
+        <a target="_blank" class="d-block mb-5" href="https://forms.gle/MvufZiucPir4yhHb6">報名與投稿表單連結</a>
       </li>
     </ul>
 
