@@ -124,7 +124,7 @@
       <tbody>
         <tr :key="idx" v-for="(el,idx) in filterBlogData">
           <td>
-            <a class="font-weight-bold" :href="el.blogUrl">{{el.name}}</a>
+            <a target="_blank" class="font-weight-bold" :href="el.blogUrl">{{el.name}}</a>
           </td>
           <!-- blog list -->
           <td>
