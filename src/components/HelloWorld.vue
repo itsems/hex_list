@@ -190,7 +190,12 @@
     <div @click="backToTop" class="gotop">Top</div>
 
     <footer>
-      <a href="https://medium.com/itsems-frontend" target="_blank">Project by itsems</a>
+      <a class="mr-3" href="https://github.com/itsems" target="_blank">
+        <img width="30" src="../assets/github.png" alt />
+      </a>
+      <a href="https://medium.com/itsems-frontend" target="_blank">
+        <img width="30" src="../assets/medium.png" alt />
+      </a>
     </footer>
   </div>
 </template>
