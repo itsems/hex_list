@@ -310,10 +310,7 @@ export default {
       // check 作者是否已在收藏清單中
       for (var i = 0; i < this.savedAuthor.length; i++) {
         if (
-          this.savedAuthor[i].name
-            .toLowerCase()
-            .includes(this.filterBlogData[idx].name.toLowerCase()) &&
-          this.savedAuthor[i].name != "不公開"
+          this.savedAuthor[i].blogUrl.includes(this.filterBlogData[idx].blogUrl)
         ) {
           alert("此作者已在收藏名單中！");
           return;
