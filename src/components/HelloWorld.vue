@@ -281,13 +281,20 @@ export default {
     GetThisWeek() {
       var d = new Date();
       var nowday = d.getDay();
+      console.log("nowday: " + nowday);
+
+      // if Sunday
+      if (nowday == 0) nowday = 7;
 
       let first = new Date(d.setDate(d.getDate() - nowday + 1)),
         f_month = "" + (first.getMonth() + 1),
         f_day = "" + first.getDate(),
         f_year = first.getFullYear();
+      console.log("first: " + first);
       let FormattedFirstDay = [f_year, f_month, f_day].join("-");
+      console.log("FormattedFirstDay: " + FormattedFirstDay);
       let newFirstDay = new Date(FormattedFirstDay);
+      console.log("newFirstDay: " + newFirstDay);
 
       for (var i = 0; i < this.savedAuthor.length; i++) {
         var zz = new Date(this.savedAuthor[i].updateTime.split(" ")[0]);
