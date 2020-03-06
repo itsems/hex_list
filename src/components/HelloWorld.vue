@@ -75,13 +75,13 @@
         </tr>
         <!-- content -->
         <tbody>
-          <tr :key="idx" v-for="(el,idx) in savedAuthor">
+          <tr :key="idx" v-for="(el,idx) in updatedSavedAuthor">
             <td>
               <a target="_blank" class="font-weight-bold" :href="el.blogUrl">{{el.name}}</a>
             </td>
             <td>
               <ul>
-                <li :key="idx2" v-for="(art, idx2) in savedAuthor[idx].blogList">
+                <li :key="idx2" v-for="(art, idx2) in updatedSavedAuthor[idx].blogList">
                   <a target="_blank" :href="art.url">{{art.title}}</a>
                 </li>
               </ul>
@@ -215,7 +215,8 @@ export default {
       reverse: false,
       savedAuthor: [],
       artNum: 0,
-      tabType: "index"
+      tabType: "index",
+      updatedSavedAuthor: []
     };
   },
   created() {
@@ -226,10 +227,29 @@ export default {
       )
       .then(res => {
         this.BlogData = res.data;
+
+        // if the browser already has saved author list in savedAuthor
+        if (localStorage.getItem("MyAuthor")) {
+          this.savedAuthor = JSON.parse(localStorage.getItem("MyAuthor"));
+        }
+
+        this.updatedSavedAuthor = this.savedAuthor;
+        for (var z in this.updatedSavedAuthor) {
+          this.BlogData.filter(el => {
+            if (el.blogUrl == this.updatedSavedAuthor[z].blogUrl) {
+              // update saved author article list
+              this.updatedSavedAuthor[z] = el;
+            }
+          });
+        }
+
+        this.GetThisWeek();
+
         this.BlogData.sort(function(a, b) {
           return a.updateTime < b.updateTime ? 1 : -1;
         });
 
+        // article numbers
         this.BlogData.forEach(item => {
           this.artNum = this.artNum + item.blogList.length;
         });
@@ -237,9 +257,6 @@ export default {
       .catch(function(err) {
         console.error(err);
       });
-
-    this.GetSavedAuthor();
-    this.GetThisWeek();
   },
 
   computed: {
@@ -272,16 +289,9 @@ export default {
     }
   },
   methods: {
-    GetSavedAuthor() {
-      const MyAuthor = localStorage.getItem("MyAuthor");
-      if (MyAuthor) {
-        this.savedAuthor = JSON.parse(localStorage.getItem("MyAuthor"));
-      }
-    },
     GetThisWeek() {
       var d = new Date();
       var nowday = d.getDay();
-      console.log("nowday: " + nowday);
 
       // if Sunday
       if (nowday == 0) nowday = 7;
@@ -290,16 +300,13 @@ export default {
         f_month = "" + (first.getMonth() + 1),
         f_day = "" + first.getDate(),
         f_year = first.getFullYear();
-      console.log("first: " + first);
       let FormattedFirstDay = [f_year, f_month, f_day].join("-");
-      console.log("FormattedFirstDay: " + FormattedFirstDay);
       let newFirstDay = new Date(FormattedFirstDay);
-      console.log("newFirstDay: " + newFirstDay);
 
-      for (var i = 0; i < this.savedAuthor.length; i++) {
-        var zz = new Date(this.savedAuthor[i].updateTime.split(" ")[0]);
-        if (zz >= newFirstDay) this.savedAuthor[i].updated = true;
-        else this.savedAuthor[i].updated = false;
+      for (var i = 0; i < this.updatedSavedAuthor.length; i++) {
+        var zz = new Date(this.updatedSavedAuthor[i].updateTime.split(" ")[0]);
+        if (zz >= newFirstDay) this.updatedSavedAuthor[i].updated = true;
+        else this.updatedSavedAuthor[i].updated = false;
       }
     },
     reverseIt() {
@@ -315,6 +322,7 @@ export default {
     },
     addFollow(idx) {
       // check 作者是否已在收藏清單中
+
       for (var i = 0; i < this.savedAuthor.length; i++) {
         if (
           this.savedAuthor[i].blogUrl.includes(this.filterBlogData[idx].blogUrl)
