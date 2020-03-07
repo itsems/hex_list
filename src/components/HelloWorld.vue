@@ -75,13 +75,13 @@
         </tr>
         <!-- content -->
         <tbody>
-          <tr :key="idx" v-for="(el,idx) in updatedSavedAuthor">
+          <tr :key="idx" v-for="(el,idx) in savedAuthor">
             <td>
               <a target="_blank" class="font-weight-bold" :href="el.blogUrl">{{el.name}}</a>
             </td>
             <td>
               <ul>
-                <li :key="idx2" v-for="(art, idx2) in updatedSavedAuthor[idx].blogList">
+                <li :key="idx2" v-for="(art, idx2) in savedAuthor[idx].blogList">
                   <a target="_blank" :href="art.url">{{art.title}}</a>
                 </li>
               </ul>
@@ -213,9 +213,9 @@ export default {
       anotherData: [],
       type: "",
       reverse: false,
-      savedAuthor: [],
       artNum: 0,
       tabType: "index",
+      savedAuthor: [],
       updatedSavedAuthor: []
     };
   },
@@ -233,12 +233,11 @@ export default {
           this.savedAuthor = JSON.parse(localStorage.getItem("MyAuthor"));
         }
 
-        this.updatedSavedAuthor = this.savedAuthor;
-        for (var z in this.updatedSavedAuthor) {
+        // update saved Author blogList using blogUrl
+        for (var z in this.savedAuthor) {
           this.BlogData.filter(el => {
-            if (el.blogUrl == this.updatedSavedAuthor[z].blogUrl) {
-              // update saved author article list
-              this.updatedSavedAuthor[z] = el;
+            if (el.blogUrl == this.savedAuthor[z].blogUrl) {
+              this.savedAuthor[z] = el;
             }
           });
         }
@@ -303,11 +302,12 @@ export default {
       let FormattedFirstDay = [f_year, f_month, f_day].join("-");
       let newFirstDay = new Date(FormattedFirstDay);
 
-      for (var i = 0; i < this.updatedSavedAuthor.length; i++) {
-        var zz = new Date(this.updatedSavedAuthor[i].updateTime.split(" ")[0]);
-        if (zz >= newFirstDay) this.updatedSavedAuthor[i].updated = true;
-        else this.updatedSavedAuthor[i].updated = false;
+      for (var i = 0; i < this.savedAuthor.length; i++) {
+        var zz = new Date(this.savedAuthor[i].updateTime.split(" ")[0]);
+        if (zz >= newFirstDay) this.savedAuthor[i].updated = true;
+        else this.savedAuthor[i].updated = false;
       }
+      
     },
     reverseIt() {
       if (this.reverse) {
@@ -322,7 +322,6 @@ export default {
     },
     addFollow(idx) {
       // check 作者是否已在收藏清單中
-
       for (var i = 0; i < this.savedAuthor.length; i++) {
         if (
           this.savedAuthor[i].blogUrl.includes(this.filterBlogData[idx].blogUrl)
