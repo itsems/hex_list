@@ -54,14 +54,14 @@
             class="nav-link"
           >收藏的挑戰者</a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a
             href="javascript:;"
             @click="tabType='artNum'"
             :class="{'active':tabType=='artNum'}"
             class="nav-link"
           >文章數排行</a>
-        </li>
+        </li>-->
       </ul>
 
       <!-- 收藏table -->
