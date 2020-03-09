@@ -98,7 +98,7 @@
               </td>
               <td>
                 <div class="d-inline-block align-top" style="width:120px">
-                  <button @click="asdf" class="mr-3 btn btn-success btn-sm">更多</button>
+                  <button @click="moreToggle" class="mr-3 btn btn-success btn-sm">更多</button>
                   <span v-if="el.updated" class="badge badge-warning">New!</span>
                 </div>
                 <ul style="width:calc(100% - 120px)" class="d-inline-block savedList">
@@ -176,14 +176,10 @@
             <th>文章列表(由近到遠)</th>
 
             <th width="210">
-              <span class="mr-2">更新時間</span>
-              <img
-                class="arr"
-                :class="{rev:reverse}"
-                @click="reverse=!reverse;reverseIt()"
-                src="../assets/arr.png"
-                alt
-              />
+              <div @click="reverse=!reverse;reverseIt()" class="reverse">
+                <span class="mr-2">更新時間</span>
+                <img class="arr" :class="{rev:reverse}" src="../assets/arr.png" alt />
+              </div>
             </th>
             <th>收藏</th>
           </tr>
@@ -329,11 +325,11 @@ export default {
     }
   },
   methods: {
-    asdf(e) {
+    moreToggle(e) {
       var ul = e.target.parentElement.nextSibling;
       var n = ul.className;
-      if (n.includes("test")) ul.classList.remove("test");
-      else ul.classList.add("test");
+      if (n.includes("open")) ul.classList.remove("open");
+      else ul.classList.add("open");
 
       e.target.innerText == "更多"
         ? (e.target.innerText = "收起")
@@ -466,8 +462,12 @@ p {
 .updateTime {
   word-break: keep-all;
 }
-.arr {
+.reverse {
   cursor: pointer;
+}
+.arr {
+  position: relative;
+  top: -2px;
 }
 .rev {
   transform: rotate(180deg);
@@ -484,7 +484,7 @@ footer {
   display: none;
   word-break: break-all;
 }
-.savedList.test li {
+.savedList.open li {
   display: block;
 }
 
