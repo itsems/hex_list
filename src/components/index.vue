@@ -54,14 +54,14 @@
             class="nav-link"
           >收藏的挑戰者</a>
         </li>
-        <!-- <li class="nav-item">
+        <li class="nav-item">
           <a
             href="javascript:;"
             @click="tabType='artNum'"
             :class="{'active':tabType=='artNum'}"
             class="nav-link"
           >文章數排行</a>
-        </li>-->
+        </li>
       </ul>
 
       <!-- 收藏table -->
@@ -184,21 +184,24 @@
             <th>收藏</th>
           </tr>
           <tbody>
-            <tr :key="idx" v-for="(el,idx) in filterBlogData">
+            <tr :key="idxFiltered" v-for="(el,idxFiltered) in filterBlogData">
               <td>
                 <a target="_blank" class="font-weight-bold" :href="el.blogUrl">{{el.name}}</a>
               </td>
               <!-- blog list -->
               <td>
                 <ul>
-                  <li :key="idx2" v-for="(art, idx2) in filterBlogData[idx].blogList">
+                  <li
+                    :key="idx2List"
+                    v-for="(art, idx2List) in filterBlogData[idxFiltered].blogList"
+                  >
                     <a target="_blank" :href="art.url">{{art.title}}</a>
                   </li>
                 </ul>
               </td>
               <td class="updateTime">{{el.updateTime}}</td>
               <td class="align-middle text-center">
-                <p @click="addFollow(idx)">
+                <p @click="addFollow(idxFiltered)">
                   <img class="add" src="../assets/add.png" alt />
                 </p>
               </td>
@@ -215,12 +218,89 @@
           <li>銀角獎 (實體獎座)：成功撰寫滿 25 週者均可獲得。</li>
           <li>銅角獎 (數位獎狀)：成功撰寫滿 10 週者均可獲得。</li>
         </ul>
-        <table>
-          <tr>
-            <td>name</td>
-            <td>artNum</td>
-          </tr>
-        </table>
+        <div class="row">
+          <div class="col-4">
+            <table class="text-center table table-bordered">
+              <tr class="thead-light">
+                <th class="prize" colspan="3">金角獎</th>
+              </tr>
+              <tr>
+                <th>🙌🏻</th>
+                <th>挑戰者</th>
+                <th>文章數量</th>
+              </tr>
+              <tbody>
+                <tr :key="idxGolden" v-for="(ppl,idxGolden) in rankData.golden">
+                  <td>{{idxGolden+1}}</td>
+                  <td class="pr-name">{{rankData.golden[idxGolden].name}}</td>
+                  <td class="pr-num">{{rankData.golden[idxGolden].blogList.length}}</td>
+                </tr>
+                <tr class="thead-light">
+                  <th colspan="3" class="about">加油！接近中...</th>
+                </tr>
+                <tr :key="idx +'-label'" v-for="(pplClose,idx) in rankData.goldenClose">
+                  <td>{{idx+1}}</td>
+                  <td>{{rankData.goldenClose[idx].name}}</td>
+                  <td>{{rankData.goldenClose[idx].blogList.length}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-4">
+            <table class="text-center table table-bordered">
+              <tr class="thead-light">
+                <th class="prize" colspan="3">銀角獎</th>
+              </tr>
+              <tr>
+                <th>🙌🏻</th>
+                <th>挑戰者</th>
+                <th>文章數量</th>
+              </tr>
+              <tbody>
+                <tr :key="idxSilver" v-for="(ppl,idxSilver) in rankData.silver">
+                  <td>{{idxSilver+1}}</td>
+                  <td class="pr-name">{{rankData.silver[idxSilver].name}}</td>
+                  <td class="pr-num">{{rankData.silver[idxSilver].blogList.length}}</td>
+                </tr>
+                <tr class="thead-light">
+                  <th colspan="3" class="about">加油！接近中...</th>
+                </tr>
+                <tr :key="idx +'-label'" v-for="(pplClose,idx) in rankData.silverClose">
+                  <td>{{idx+1}}</td>
+                  <td>{{rankData.silverClose[idx].name}}</td>
+                  <td>{{rankData.silverClose[idx].blogList.length}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-4">
+            <table class="text-center table table-bordered">
+              <tr class="thead-light">
+                <th class="prize" colspan="3">銅角獎</th>
+              </tr>
+              <tr>
+                <th>🙌🏻</th>
+                <th>挑戰者</th>
+                <th>文章數量</th>
+              </tr>
+              <tbody>
+                <tr :key="idxBrass" v-for="(ppl,idxBrass) in rankData.brass">
+                  <td>{{idxBrass+1}}</td>
+                  <td class="pr-name">{{rankData.brass[idxBrass].name}}</td>
+                  <td class="pr-num">{{rankData.brass[idxBrass].blogList.length}}</td>
+                </tr>
+                <tr class="thead-light">
+                  <th colspan="3" class="about">加油！接近中...</th>
+                </tr>
+                <tr :key="idx +'-label'" v-for="(pplClose,idx) in rankData.brassClose">
+                  <td>{{idx+1}}</td>
+                  <td>{{rankData.brassClose[idx].name}}</td>
+                  <td>{{rankData.brassClose[idx].blogList.length}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </section>
 
       <div @click="backToTop" class="gotop">Top</div>
@@ -252,7 +332,8 @@ export default {
       artNum: 0,
       tabType: "index",
       savedAuthor: [],
-      updatedSavedAuthor: []
+      updatedSavedAuthor: [],
+      rankData: []
     };
   },
   created() {
@@ -280,7 +361,7 @@ export default {
 
         this.GetThisWeek();
 
-        this.BlogData.sort(function(a, b) {
+        this.BlogData.sort((a, b) => {
           return a.updateTime < b.updateTime ? 1 : -1;
         });
 
@@ -288,6 +369,60 @@ export default {
         this.BlogData.forEach(item => {
           item.blogList.reverse();
           this.artNum = this.artNum + item.blogList.length;
+        });
+
+        // ranking Data
+        var goldNum = 40;
+        var silverNum = 25;
+        var brassNum = 10;
+
+        // 金角
+        this.rankData.golden = this.BlogData.filter(item => {
+          return item.blogList.length > goldNum;
+        }).sort((a, b) => {
+          return b.blogList.length - a.blogList.length;
+        });
+        this.rankData.goldenClose = this.BlogData.filter(item => {
+          return (
+            item.blogList.length + 4 > goldNum && item.blogList.length < goldNum
+          );
+        }).sort((a, b) => {
+          return b.blogList.length - a.blogList.length;
+        });
+
+        // 銀角
+        this.rankData.silver = this.BlogData.filter(item => {
+          return (
+            item.blogList.length > silverNum && item.blogList.length < goldNum
+          );
+        }).sort((a, b) => {
+          return b.blogList.length - a.blogList.length;
+        });
+        this.rankData.silverClose = this.BlogData.filter(item => {
+          return (
+            item.blogList.length + 4 > silverNum &&
+            item.blogList.length < silverNum
+          );
+        }).sort((a, b) => {
+          return b.blogList.length - a.blogList.length;
+        });
+
+        // 銅角
+        // 已得銅角
+        this.rankData.brass = this.BlogData.filter(item => {
+          return (
+            item.blogList.length > brassNum && item.blogList.length < silverNum
+          );
+        }).sort((a, b) => {
+          return b.blogList.length - a.blogList.length;
+        });
+        this.rankData.brassClose = this.BlogData.filter(item => {
+          return (
+            item.blogList.length + 4 > brassNum &&
+            item.blogList.length < brassNum
+          );
+        }).sort((a, b) => {
+          return b.blogList.length - a.blogList.length;
         });
       })
       .catch(function(err) {
@@ -518,5 +653,20 @@ footer {
 }
 .gotop:hover {
   border: 1px solid #aaa;
+}
+
+/* ranking */
+.table .thead-light .prize {
+  color: gold;
+  color: #ccad09;
+  font-size: 20px;
+}
+.pr-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+.pr-num {
+  color: red;
+  font-weight: bold;
 }
 </style>
