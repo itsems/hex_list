@@ -112,7 +112,8 @@
               <td class="updateTime text-center align-middle">
                 <!-- updated this week -->
                 <img v-if="el.updated" src="../assets/check.png" alt />
-                <img v-else src="../assets/uncheck.png" alt />
+                <!-- <img v-else src="../assets/uncheck.png" alt /> -->
+                <img class="hourglass" v-else src="../assets/hourglass.png" alt />
               </td>
               <td class="text-center align-middle">
                 <p @click="unfollow(idx)">
@@ -668,5 +669,21 @@ footer {
 .pr-num {
   color: red;
   font-weight: bold;
+}
+.hourglass {
+  width: 20px;
+  animation: hourglass 1.2s ease-in-out infinite;
+}
+
+@keyframes hourglass {
+  from {
+    transform: rotate(0);
+  }
+  70% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
 }
 </style>
