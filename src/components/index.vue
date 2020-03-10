@@ -66,7 +66,7 @@
 
       <!-- 收藏table -->
       <section v-if="tabType=='index'||tabType=='savedAuthor'" class="pt-5 savedAuthor">
-        <h3>收藏的挑戰者</h3>
+        <h3 class="font-weight-bold mb-4">收藏的挑戰者</h3>
         <table class="table table-bordered table-hover mt-3 mb-5">
           <!-- th -->
           <tr class="thead-light">
@@ -128,7 +128,7 @@
       <!-- 搜尋和文章列表 -->
       <section v-if="tabType=='index'||tabType=='allArt'" class="pt-5 artList">
         <!-- Query Table -->
-        <h3>搜尋</h3>
+        <h3 class="font-weight-bold mb-4">搜尋</h3>
         <table class="table table-bordered text-center mt-3">
           <tr class="thead-light">
             <th>
@@ -164,7 +164,7 @@
           </tr>
         </table>
         <br />
-        <h3>文章總表</h3>
+        <h3 class="font-weight-bold mb-4 mt-5">文章總表</h3>
         <div class="info text-left">
           <p>共計挑戰者：{{BlogData.length}}</p>
           <p>共計挑戰文章：{{artNum}}</p>
@@ -186,7 +186,8 @@
           </tr>
           <tbody>
             <tr :key="idxFiltered" v-for="(el,idxFiltered) in filterBlogData">
-              <td>
+              <!-- name -->
+              <td class="align-middle text-center">
                 <a target="_blank" class="font-weight-bold" :href="el.blogUrl">{{el.name}}</a>
               </td>
               <!-- blog list -->
@@ -200,7 +201,9 @@
                   </li>
                 </ul>
               </td>
+              <!-- update time -->
               <td class="updateTime">{{el.updateTime}}</td>
+              <!-- updated -->
               <td class="align-middle text-center">
                 <p @click="addFollow(idxFiltered)">
                   <img class="add" src="../assets/add.png" alt />
@@ -237,7 +240,7 @@
                   <td class="pr-num">{{rankData.golden[idxGolden].blogList.length}}</td>
                 </tr>
                 <tr class="thead-light">
-                  <th colspan="3" class="about">加油！接近中...</th>
+                  <th colspan="3" class="about">加油！差一點點！</th>
                 </tr>
                 <tr :key="idx +'-label'" v-for="(pplClose,idx) in rankData.goldenClose">
                   <td>{{idx+1}}</td>
@@ -264,7 +267,7 @@
                   <td class="pr-num">{{rankData.silver[idxSilver].blogList.length}}</td>
                 </tr>
                 <tr class="thead-light">
-                  <th colspan="3" class="about">加油！接近中...</th>
+                  <th colspan="3" class="about">加油！差一點點！</th>
                 </tr>
                 <tr :key="idx +'-label'" v-for="(pplClose,idx) in rankData.silverClose">
                   <td>{{idx+1}}</td>
@@ -291,7 +294,7 @@
                   <td class="pr-num">{{rankData.brass[idxBrass].blogList.length}}</td>
                 </tr>
                 <tr class="thead-light">
-                  <th colspan="3" class="about">加油！接近中...</th>
+                  <th colspan="3" class="about">加油！差一點點！</th>
                 </tr>
                 <tr :key="idx +'-label'" v-for="(pplClose,idx) in rankData.brassClose">
                   <td>{{idx+1}}</td>
@@ -559,6 +562,9 @@ export default {
 }
 .act-list a:hover {
   color: #fff;
+}
+.nav-link.active {
+  font-weight: bold;
 }
 input {
   padding: 0 5px;
