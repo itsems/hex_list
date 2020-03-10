@@ -3,11 +3,11 @@
     <div class="banner-zone">
       <div class="banner"></div>
       <div class="bn-txt">
-        <h1>w3HexSchool 鼠年全馬鐵人挑戰</h1>
+        <h1 class="font-weight-bold">w3HexSchool 鼠年全馬鐵人挑戰</h1>
         <h2>文章查詢及追蹤收藏挑戰者</h2>
       </div>
       <div class="container">
-        <div class="act-list mt-4">
+        <div class="act-list mt-5">
           <a
             class="mr-4 btn btn-success"
             target="_blank"
@@ -543,10 +543,10 @@ export default {
   width: 100%;
   height: 400px;
   background-image: url("https://firebasestorage.googleapis.com/v0/b/hexschool-api.appspot.com/o/blog%2F2019%2F11%2Fw3HS%E9%90%B5%E4%BA%BA%E8%B3%BDbanner.png?alt=media&token=3f0ef8fd-6285-47ac-a159-83ff3fb3972e");
-  background-position: center top;
+  background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  opacity: 0.2;
+  opacity: 0.13;
 }
 .bn-txt {
   margin-top: -280px;
