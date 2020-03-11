@@ -199,7 +199,7 @@
             <th>文章列表(由近到遠)</th>
 
             <th width="210">
-              <div @click="reverse=!reverse;reverseIt()" class="reverse">
+              <div @click="reverse=!reverse;filterBlogData.reverse()" class="reverse">
                 <span class="mr-2">更新時間</span>
                 <img class="arr" :class="{rev:reverse}" src="../assets/arr.png" alt />
               </div>
@@ -546,17 +546,6 @@ export default {
         var zz = new Date(this.savedAuthor[i].updateTime.split(" ")[0]);
         if (zz >= newFirstDay) this.savedAuthor[i].updated = true;
         else this.savedAuthor[i].updated = false;
-      }
-    },
-    reverseIt() {
-      if (this.reverse) {
-        this.BlogData.sort(function(a, b) {
-          return a.updateTime < b.updateTime ? -1 : 1;
-        });
-      } else {
-        this.BlogData.sort(function(a, b) {
-          return a.updateTime < b.updateTime ? 1 : -1;
-        });
       }
     },
     addFollow(idx) {
