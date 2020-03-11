@@ -148,6 +148,9 @@
                   placeholder="搜尋作者"
                   class="form-control"
                 />
+                <div class="input-group-append">
+                  <span @click="searchAuthor=''" class="input-group-text cp">Clear</span>
+                </div>
               </div>
             </td>
             <td>
@@ -159,7 +162,26 @@
                   type="text"
                   class="form-control"
                 />
+                <div class="input-group-append">
+                  <span @click="searchBlogList=''" class="input-group-text cp">Clear</span>
+                </div>
               </div>
+              <!-- <p style="font-size:14px" class="mt-3 text-left">
+                試著搜尋...
+                <span
+                  @click="searchBlogList='HTML'"
+                  class="badge badge-secondary cp mr-1"
+                >HTML</span>
+                <span @click="searchBlogList='CSS'" class="badge badge-info cp mr-1">CSS</span>
+                <span
+                  @click="searchBlogList='Javascript'"
+                  class="badge badge-danger cp mr-1"
+                >Javascript</span>
+                <span @click="searchBlogList='Vue'" class="badge badge-primary cp mr-1">Vue</span>
+                <span @click="searchBlogList='React'" class="badge badge-light cp mr-1">React</span>
+                <span @click="searchBlogList='ES6'" class="badge badge-warning cp mr-1">ES6</span>
+                <span @click="searchBlogList='Node'" class="badge badge-success cp">Node</span>
+              </p>-->
             </td>
           </tr>
         </table>
@@ -216,13 +238,22 @@
 
       <!-- 文章數排行 -->
       <section v-if="tabType=='artNum'" class="pt-5">
-        <h3>文章數排行</h3>
-        <ul class="text-left">
-          <li>金角獎 (實體獎座)：成功撰寫滿 40 週者均可獲得。</li>
-          <li>銀角獎 (實體獎座)：成功撰寫滿 25 週者均可獲得。</li>
-          <li>銅角獎 (數位獎狀)：成功撰寫滿 10 週者均可獲得。</li>
+        <h3 class="font-weight-bold">文章數排行</h3>
+        <ul class="text-left mb-5">
+          <li>
+            金角獎 (實體獎座)：成功撰寫滿
+            <span class="font-weight-bold">40</span> 週者均可獲得。
+          </li>
+          <li>
+            銀角獎 (實體獎座)：成功撰寫滿
+            <span class="font-weight-bold">25</span> 週者均可獲得。
+          </li>
+          <li>
+            銅角獎 (數位獎狀)：成功撰寫滿
+            <span class="font-weight-bold">10</span> 週者均可獲得。
+          </li>
         </ul>
-        <div class="row">
+        <div class="row justify-content-center">
           <div class="col-4">
             <table class="text-center table table-bordered">
               <tr class="thead-light">
@@ -277,7 +308,7 @@
               </tbody>
             </table>
           </div>
-          <div class="col-4">
+          <div v-if="rankData.brass.length>0" class="col-4">
             <table class="text-center table table-bordered">
               <tr class="thead-light">
                 <th class="prize" colspan="3">銅角獎</th>
@@ -337,7 +368,7 @@ export default {
       tabType: "index",
       savedAuthor: [],
       updatedSavedAuthor: [],
-      rankData: []
+      rankData: { golden: [], silver: [], brass: [] }
     };
   },
   created() {
@@ -365,8 +396,31 @@ export default {
 
         this.GetThisWeek();
 
+        // Date time Ranking Handle
+
+        Date.prototype.addHours = function(h) {
+          this.setHours(this.getHours() + h);
+          return this;
+        };
+
+        // Transfer locale Datetime String to Date() object
+        this.BlogData.forEach(item => {
+          var se = item.updateTime.split(" ");
+          var newTimeStr = se[0] + " " + se[2] + " GMT";
+          item.updateTime = new Date(newTimeStr);
+          if (se[1] == "下午") {
+            item.updateTime.addHours(12);
+          }
+        });
+
+        // Sort data
         this.BlogData.sort((a, b) => {
           return a.updateTime < b.updateTime ? 1 : -1;
+        });
+
+        // Transfer Date() object back to LocaleString
+        this.BlogData.forEach(item => {
+          item.updateTime = new Date(item.updateTime).toLocaleString();
         });
 
         // article numbers
@@ -567,8 +621,8 @@ export default {
   font-weight: bold;
 }
 input {
-  padding: 0 5px;
-  margin-right: 10px;
+  padding: 0 10px;
+  /* margin-right: 10px; */
 }
 table {
   width: 100%;
@@ -600,6 +654,9 @@ a:hover {
 }
 p {
   margin-bottom: 0;
+}
+.cp {
+  cursor: pointer;
 }
 .updateTime {
   word-break: keep-all;
