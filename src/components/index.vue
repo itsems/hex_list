@@ -1,354 +1,217 @@
-<template>
-  <div>
-    <div class="banner-zone">
-      <div class="banner"></div>
-      <div class="bn-txt">
-        <h1 class="font-weight-bold">w3HexSchool 鼠年全馬鐵人挑戰</h1>
-        <h2>文章查詢及追蹤收藏挑戰者</h2>
-      </div>
-      <div class="container">
-        <div class="act-list mt-5">
-          <a
-            class="mr-4 btn btn-success"
-            target="_blank"
-            href="https://www.hexschool.com/2019/11/14/2019-11-14-w3Hexschool-2020-challenge/"
-          >活動連結</a>
-          <a
-            class="mr-4 btn btn-success"
-            target="_blank"
-            href="https://forms.gle/MvufZiucPir4yhHb6"
-          >報名與投稿表單連結</a>
-          <a
-            target="_blank"
-            class="btn btn-success"
-            href="https://github.com/hexschool/w3hexschool-API"
-          >報名API</a>
-        </div>
-      </div>
-    </div>
+<template lang="pug">
+  div
+    .banner-zone
+      .banner
+      .bn-txt
+        h1.font-weight-bold w3HexSchool 鼠年全馬鐵人挑戰
+        h2 文章查詢及追蹤收藏挑戰者
+      .container
+        .act-list.mt-5
+          a.mr-4.btn.btn-success(target='_blank' href='https://www.hexschool.com/2019/11/14/2019-11-14-w3Hexschool-2020-challenge/') 活動連結
+          a.mr-4.btn.btn-success(target='_blank' href='https://forms.gle/MvufZiucPir4yhHb6') 報名與投稿表單連結
+          a.btn.btn-success(target='_blank' href='https://github.com/hexschool/w3hexschool-API') 報名API
 
-    <div class="container">
-      <ul class="nav nav-tabs mt-3">
-        <li class="nav-item">
-          <a
-            href="javascript:;"
-            @click="tabType='index'"
-            :class="{'active':tabType=='index'}"
-            class="nav-link"
-          >總覽</a>
-        </li>
+    .container
+      ul.nav.nav-tabs.mt-3
+        li.nav-item
+          a.nav-link(href='javascript:;' @click="tabType='index'" :class="{'active':tabType=='index'}") 總覽
+        li.nav-item
+          a.nav-link(href='javascript:;' @click="tabType='allArt'" :class="{'active':tabType=='allArt'}") 文章總表
+        li.nav-item
+          a.nav-link(href='javascript:;' @click="tabType='savedAuthor'" :class="{'active':tabType=='savedAuthor'}") 收藏的挑戰者
+        li.nav-item
+          a.nav-link(href='javascript:;' @click="tabType='artNum'" :class="{'active':tabType=='artNum'}") 文章數排行
 
-        <li class="nav-item">
-          <a
-            href="javascript:;"
-            @click="tabType='allArt'"
-            :class="{'active':tabType=='allArt'}"
-            class="nav-link"
-          >文章總表</a>
-        </li>
-        <li class="nav-item">
-          <a
-            href="javascript:;"
-            @click="tabType='savedAuthor'"
-            :class="{'active':tabType=='savedAuthor'}"
-            class="nav-link"
-          >收藏的挑戰者</a>
-        </li>
-        <li class="nav-item">
-          <a
-            href="javascript:;"
-            @click="tabType='artNum'"
-            :class="{'active':tabType=='artNum'}"
-            class="nav-link"
-          >文章數排行</a>
-        </li>
-      </ul>
+      //- <!-- 收藏table -->
+      section.pt-5.savedAuthor(v-if='tabType==\'index\'||tabType==\'savedAuthor\'')
+        h3.font-weight-bold.mb-4 收藏的挑戰者
+        table.table.table-bordered.table-hover.mt-3.mb-5
+          //- <!-- th -->
+          tr.thead-light
+            th(width='150') 挑戰者
+            th 文章列表
+            th(width='70') 本周
+              br
+              | 更新
 
-      <!-- 收藏table -->
-      <section v-if="tabType=='index'||tabType=='savedAuthor'" class="pt-5 savedAuthor">
-        <h3 class="font-weight-bold mb-4">收藏的挑戰者</h3>
-        <table class="table table-bordered table-hover mt-3 mb-5">
-          <!-- th -->
-          <tr class="thead-light">
-            <th width="150">挑戰者</th>
-            <th>文章列表</th>
-            <th width="70">
-              本周
-              <br />更新
-            </th>
-            <th width="70">
-              取消
-              <br />追蹤
-            </th>
-          </tr>
-          <!-- content -->
-          <tbody>
-            <tr :key="idx" v-for="(el,idx) in savedAuthor">
-              <td class="align-middle text-center">
-                <!-- name -->
-                <a target="_blank" class="font-weight-bold" :href="el.blogUrl">{{el.name}}</a>
-                <br />
-                <p style="font-size:12px;">
-                  已發布
-                  <span
-                    style="font-size:16px;position:relative;top:1px"
-                    class="text-danger font-weight-bold"
-                  >{{savedAuthor[idx].blogList.length}}</span> 篇
-                </p>
-              </td>
-              <td>
-                <div class="d-inline-block align-top" style="width:120px">
-                  <button @click="moreToggle" class="mr-3 btn btn-success btn-sm">更多</button>
-                  <span v-if="el.updated" class="badge badge-warning">New!</span>
-                </div>
-                <ul style="width:calc(100% - 120px)" class="d-inline-block savedList">
-                  <li :key="idx2" v-for="(art, idx2) in savedAuthor[idx].blogList">
-                    <a target="_blank" :href="art.url">{{art.title}}</a>
-                  </li>
-                </ul>
+            th(width='70') 取消
+              br
+              | 追蹤
 
-                <!-- 文章列表 -->
-              </td>
-              <td class="updateTime text-center align-middle">
-                <!-- updated this week -->
-                <img v-if="el.updated" src="../assets/check.png" alt />
-                <!-- <img v-else src="../assets/uncheck.png" alt /> -->
-                <img class="hourglass" v-else src="../assets/hourglass.png" alt />
-              </td>
-              <td class="text-center align-middle">
-                <p @click="unfollow(idx)">
-                  <img class="unfollow" src="../assets/un.png" alt />
-                </p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+          //- <!-- content -->
+          tbody
+            tr(:key='idx' v-for='(el,idx) in savedAuthor')
+              td.align-middle.text-center
+                //  name 
+                a.font-weight-bold(target='_blank' :href='el.blogUrl') {{el.name}}
+                br
+                p(style='font-size:12px;') 已發布
+                  span.text-danger.font-weight-bold(style='font-size:16px;position:relative;top:1px') {{savedAuthor[idx].blogList.length}}
+                  |  篇
 
-      <!-- 搜尋和文章列表 -->
-      <section v-if="tabType=='index'||tabType=='allArt'" class="pt-5 artList">
-        <!-- Query Table -->
-        <h3 class="font-weight-bold mb-4">搜尋</h3>
-        <table class="table table-bordered text-center mt-3">
-          <tr class="thead-light">
-            <th>
-              <p>搜尋作者 : {{searchAuthor}}</p>
-            </th>
-            <th>
-              <p>搜尋標題 : {{searchBlogList}}</p>
-            </th>
-          </tr>
-          <tr>
-            <td>
-              <div class="input-group">
-                <input
-                  @input="searchBlogList='';type='ar'"
-                  v-model="searchAuthor"
-                  type="text"
-                  placeholder="搜尋作者"
-                  class="form-control"
-                />
-                <div class="input-group-append">
-                  <span @click="searchAuthor=''" class="input-group-text cp">Clear</span>
-                </div>
-              </div>
-            </td>
-            <td>
-              <div class="input-group">
-                <input
-                  @input="searchAuthor='';type='su'"
-                  v-model="searchBlogList"
-                  placeholder="搜尋標題"
-                  type="text"
-                  class="form-control"
-                />
-                <div class="input-group-append">
-                  <span @click="searchBlogList=''" class="input-group-text cp">Clear</span>
-                </div>
-              </div>
-              <!-- <p style="font-size:14px" class="mt-3 text-left">
-                試著搜尋...
-                <span
-                  @click="searchBlogList='HTML'"
-                  class="badge badge-secondary cp mr-1"
-                >HTML</span>
-                <span @click="searchBlogList='CSS'" class="badge badge-info cp mr-1">CSS</span>
-                <span
-                  @click="searchBlogList='Javascript'"
-                  class="badge badge-danger cp mr-1"
-                >Javascript</span>
-                <span @click="searchBlogList='Vue'" class="badge badge-primary cp mr-1">Vue</span>
-                <span @click="searchBlogList='React'" class="badge badge-light cp mr-1">React</span>
-                <span @click="searchBlogList='ES6'" class="badge badge-warning cp mr-1">ES6</span>
-                <span @click="searchBlogList='Node'" class="badge badge-success cp">Node</span>
-              </p>-->
-            </td>
-          </tr>
-        </table>
-        <br />
-        <h3 class="font-weight-bold mb-4 mt-5">文章總表</h3>
-        <div class="info text-left">
-          <p>共計挑戰者：{{BlogData.length}}</p>
-          <p>共計挑戰文章：{{artNum}}</p>
-        </div>
+              td
+                .d-inline-block.align-top(style='width:120px')
+                  button.mr-3.btn.btn-success.btn-sm(@click='moreToggle') 更多
+                  span.badge.badge-warning(v-if='el.updated') New!
+                ul.d-inline-block.savedList(style='width:calc(100% - 120px)')
+                  li(:key='idx2' v-for='(art, idx2) in savedAuthor[idx].blogList')
+                    a(target='_blank' :href='art.url') {{art.title}}
+              //  文章列表 
+              td.updateTime.text-center.align-middle
+                //  updated this week 
+                img(v-if='el.updated' src='../assets/check.png' alt)
+                //  <img v-else src="../assets/uncheck.png" alt /> 
+                img.hourglass(v-else src='../assets/hourglass.png' alt)
+              td.text-center.align-middle
+                p(@click='unfollow(idx)')
+                  img.unfollow(src='../assets/un.png' alt)
+        
+      
 
-        <!-- Result Table -->
-        <table class="table table-bordered table-hover mt-3">
-          <tr class="thead-light">
-            <th width="150">挑戰者</th>
-            <th>文章列表(由近到遠)</th>
+      
+      //  搜尋和文章列表 
+      section.pt-5.artList(v-if="tabType=='index'||tabType=='allArt'")
+        //  Query Table 
+        h3.font-weight-bold.mb-4 搜尋
+        table.table.table-bordered.text-center.mt-3
+          tr.thead-light
+            th
+              p 搜尋作者 : {{searchAuthor}}
+            th
+              p 搜尋標題 : {{searchBlogList}}
+          tr
+            td
+              .input-group
+                input.form-control(@input="searchBlogList='';type='ar'", v-model='searchAuthor' type='text' placeholder='搜尋作者')
+                .input-group-append
+                  span.input-group-text.cp(@click="searchAuthor=''") Clear
+            td
+              .input-group
+                input.form-control(@input="searchAuthor='';type='su'", v-model='searchBlogList' placeholder='搜尋標題' type='text')
+                .input-group-append
+                  span.input-group-text.cp(@click="searchBlogList=''") Clear
+              
+        
+        br
+        h3.font-weight-bold.mb-4.mt-5 文章總表
+        .info.text-left
+          p 共計挑戰者：{{BlogData.length}}
+          p 共計挑戰文章：{{artNum}}
 
-            <th width="210">
-              <div @click="reverse=!reverse;filterBlogData.reverse()" class="reverse">
-                <span class="mr-2">更新時間</span>
-                <img class="arr" :class="{rev:reverse}" src="../assets/arr.png" alt />
-              </div>
-            </th>
-            <th>收藏</th>
-          </tr>
-          <tbody>
-            <tr :key="idxFiltered" v-for="(el,idxFiltered) in filterBlogData">
-              <!-- name -->
-              <td class="align-middle text-center">
-                <a target="_blank" class="font-weight-bold" :href="el.blogUrl">{{el.name}}</a>
-              </td>
-              <!-- blog list -->
-              <td>
-                <ul>
-                  <li
-                    :key="idx2List"
-                    v-for="(art, idx2List) in filterBlogData[idxFiltered].blogList"
-                  >
-                    <a target="_blank" :href="art.url">{{art.title}}</a>
-                  </li>
-                </ul>
-              </td>
-              <!-- update time -->
-              <td class="updateTime">{{el.updateTime}}</td>
-              <!-- updated -->
-              <td class="align-middle text-center">
-                <p @click="addFollow(idxFiltered)">
-                  <img class="add" src="../assets/add.png" alt />
-                </p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+        //  Result Table 
+        table.table-result.table.table-bordered.table-hover.mt-3
+          tr.thead-light
+            th(width='150') 挑戰者
+            th 文章列表(由近到遠)
+            th(width='210')
+              .reverse(@click='reverse=!reverse;filterBlogData.reverse()')
+                span.mr-2 更新時間
+                img.arr(:class='{rev:reverse}' src='../assets/arr.png' alt)
+            th 收藏
+          tbody
+            tr(:key='idxFiltered' v-for='(el,idxFiltered) in filterBlogData')
+              //  name 
+              td.align-middle.text-center
+                a.font-weight-bold(target='_blank' :href='el.blogUrl') {{el.name}}
+              //  blog list 
+              td.blog-list
+                ul
+                  li(:key='idx2List' v-for='(art, idx2List) in filterBlogData[idxFiltered].blogList')
+                    a(target='_blank' :href='art.url') {{art.title}}
+              //  update time 
+              td.updateTime {{el.updateTime}}
+              //  updated 
+              td.align-middle.text-center
+                p(@click='addFollow(idxFiltered)')
+                  img.add(src='../assets/add.png' alt)
+        
 
-      <!-- 文章數排行 -->
-      <section v-if="tabType=='artNum'" class="pt-5">
-        <h3 class="font-weight-bold">文章數排行</h3>
-        <ul class="text-left mb-5">
-          <li>
-            金角獎 (實體獎座)：成功撰寫滿
-            <span class="font-weight-bold">40</span> 週者均可獲得。
-          </li>
-          <li>
-            銀角獎 (實體獎座)：成功撰寫滿
-            <span class="font-weight-bold">25</span> 週者均可獲得。
-          </li>
-          <li>
-            銅角獎 (數位獎狀)：成功撰寫滿
-            <span class="font-weight-bold">10</span> 週者均可獲得。
-          </li>
-        </ul>
-        <div class="row justify-content-center">
-          <div class="col-4">
-            <table class="text-center table table-bordered">
-              <tr class="thead-light">
-                <th class="prize" colspan="3">金角獎</th>
-              </tr>
-              <tr>
-                <th>🙌🏻</th>
-                <th>挑戰者</th>
-                <th>文章數量</th>
-              </tr>
-              <tbody>
-                <tr :key="idxGolden" v-for="(ppl,idxGolden) in rankData.golden">
-                  <td>{{idxGolden+1}}</td>
-                  <td class="pr-name">{{rankData.golden[idxGolden].name}}</td>
-                  <td class="pr-num">{{rankData.golden[idxGolden].blogList.length}}</td>
-                </tr>
-                <tr class="thead-light">
-                  <th colspan="3" class="about">加油！差一點點！</th>
-                </tr>
-                <tr :key="idx +'-label'" v-for="(pplClose,idx) in rankData.goldenClose">
-                  <td>{{idx+1}}</td>
-                  <td>{{rankData.goldenClose[idx].name}}</td>
-                  <td>{{rankData.goldenClose[idx].blogList.length}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="col-4">
-            <table class="text-center table table-bordered">
-              <tr class="thead-light">
-                <th class="prize" colspan="3">銀角獎</th>
-              </tr>
-              <tr>
-                <th>🙌🏻</th>
-                <th>挑戰者</th>
-                <th>文章數量</th>
-              </tr>
-              <tbody>
-                <tr :key="idxSilver" v-for="(ppl,idxSilver) in rankData.silver">
-                  <td>{{idxSilver+1}}</td>
-                  <td class="pr-name">{{rankData.silver[idxSilver].name}}</td>
-                  <td class="pr-num">{{rankData.silver[idxSilver].blogList.length}}</td>
-                </tr>
-                <tr class="thead-light">
-                  <th colspan="3" class="about">加油！差一點點！</th>
-                </tr>
-                <tr :key="idx +'-label'" v-for="(pplClose,idx) in rankData.silverClose">
-                  <td>{{idx+1}}</td>
-                  <td>{{rankData.silverClose[idx].name}}</td>
-                  <td>{{rankData.silverClose[idx].blogList.length}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div v-if="rankData.brass.length>0" class="col-4">
-            <table class="text-center table table-bordered">
-              <tr class="thead-light">
-                <th class="prize" colspan="3">銅角獎</th>
-              </tr>
-              <tr>
-                <th>🙌🏻</th>
-                <th>挑戰者</th>
-                <th>文章數量</th>
-              </tr>
-              <tbody>
-                <tr :key="idxBrass" v-for="(ppl,idxBrass) in rankData.brass">
-                  <td>{{idxBrass+1}}</td>
-                  <td class="pr-name">{{rankData.brass[idxBrass].name}}</td>
-                  <td class="pr-num">{{rankData.brass[idxBrass].blogList.length}}</td>
-                </tr>
-                <tr class="thead-light">
-                  <th colspan="3" class="about">加油！差一點點！</th>
-                </tr>
-                <tr :key="idx +'-label'" v-for="(pplClose,idx) in rankData.brassClose">
-                  <td>{{idx+1}}</td>
-                  <td>{{rankData.brassClose[idx].name}}</td>
-                  <td>{{rankData.brassClose[idx].blogList.length}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
+      //  文章數排行 
+      section.pt-5(v-if='tabType==\'artNum\'')
+        h3.font-weight-bold 文章數排行
+        ul.text-left.mb-5
+          li 金角獎 (實體獎座)：成功撰寫滿 
+            span.font-weight-bold 40
+            |  週者均可獲得。
 
-      <div @click="backToTop" class="gotop">Top</div>
-    </div>
-    <footer>
-      <a class="mr-3" href="https://github.com/itsems" target="_blank">
-        <img width="30" src="../assets/github.png" alt />
-      </a>
-      <a href="https://medium.com/itsems-frontend" target="_blank">
-        <img width="30" src="../assets/medium.png" alt />
-      </a>
-    </footer>
-  </div>
+          li 銀角獎 (實體獎座)：成功撰寫滿
+            span.font-weight-bold 25
+            |  週者均可獲得。
+          li 銅角獎 (數位獎狀)：成功撰寫滿
+            span.font-weight-bold 10
+            |  週者均可獲得。
+
+        .row.justify-content-center
+          .col-4
+            table.text-center.table.table-bordered
+              tr.thead-light
+                th.prize(colspan='3') 金角獎
+              tr
+                th 🙌🏻
+                th 挑戰者
+                th 文章數量
+              tbody
+                tr(:key='idxGolden' v-for='(ppl,idxGolden) in rankData.golden')
+                  td {{idxGolden+1}}
+                  td.pr-name {{rankData.golden[idxGolden].name}}
+                  td.pr-num {{rankData.golden[idxGolden].blogList.length}}
+                tr.thead-light
+                  th.about(colspan='3') 加油！差一點點！
+                tr(:key='idx +\'-label\'' v-for='(pplClose,idx) in rankData.goldenClose')
+                  td {{idx+1}}
+                  td {{rankData.goldenClose[idx].name}}
+                  td {{rankData.goldenClose[idx].blogList.length}}
+
+          .col-4
+            table.text-center.table.table-bordered
+              tr.thead-light
+                th.prize(colspan='3') 銀角獎
+              tr
+                th 🙌🏻
+                th 挑戰者
+                th 文章數量
+              tbody
+                tr(:key='idxSilver' v-for='(ppl,idxSilver) in rankData.silver')
+                  td {{idxSilver+1}}
+                  td.pr-name {{rankData.silver[idxSilver].name}}
+                  td.pr-num {{rankData.silver[idxSilver].blogList.length}}
+                tr.thead-light
+                  th.about(colspan='3') 加油！差一點點！
+                tr(:key='idx +\'-label\'' v-for='(pplClose,idx) in rankData.silverClose')
+                  td {{idx+1}}
+                  td {{rankData.silverClose[idx].name}}
+                  td {{rankData.silverClose[idx].blogList.length}}
+            
+          .col-4(v-if='rankData.brass.length>0')
+            table.text-center.table.table-bordered
+              tr.thead-light
+                th.prize(colspan='3') 銅角獎
+              tr
+                th 🙌🏻
+                th 挑戰者
+                th 文章數量
+              tbody
+                tr(:key='idxBrass' v-for='(ppl,idxBrass) in rankData.brass')
+                  td {{idxBrass+1}}
+                  td.pr-name {{rankData.brass[idxBrass].name}}
+                  td.pr-num {{rankData.brass[idxBrass].blogList.length}}
+                tr.thead-light
+                  th.about(colspan='3') 加油！差一點點！
+                tr(:key='idx +\'-label\'' v-for='(pplClose,idx) in rankData.brassClose')
+                  td {{idx+1}}
+                  td {{rankData.brassClose[idx].name}}
+                  td {{rankData.brassClose[idx].blogList.length}}
+            
+        
+        
+      .gotop(@click='backToTop') Top
+    
+    footer
+      a.mr-3(href='https://github.com/itsems' target='_blank')
+        img(width='30' src='../assets/github.png' alt)
+      a(href='https://medium.com/itsems-frontend' target='_blank')
+        img(width='30' src='../assets/medium.png' alt)
+  
 </template>
 
 <script>
@@ -403,13 +266,21 @@ export default {
           return this;
         };
 
+        // Date.prototype.minusDay = function(h) {
+        //   this.setDate(this.getDate() - h);
+        //   return this;
+        // };
+
         // Transfer locale Datetime String to Date() object
+
         this.BlogData.forEach(item => {
           var se = item.updateTime.split(" ");
           var newTimeStr = se[0] + " " + se[2] + " GMT";
           item.updateTime = new Date(newTimeStr);
           if (se[1] == "下午") {
-            item.updateTime.addHours(12);
+            item.updateTime.addHours(4);
+          } else {
+            item.updateTime.addHours(-8);
           }
         });
 
@@ -613,6 +484,7 @@ input {
   padding: 0 10px;
   /* margin-right: 10px; */
 }
+
 table {
   width: 100%;
   word-break: break-all;
@@ -631,8 +503,9 @@ table th {
 table ul {
   list-style-type: none;
   padding: 0;
+  margin-bottom: 0;
 }
-li {
+li:not(:last-child) {
   margin-bottom: 10px;
 }
 a {
