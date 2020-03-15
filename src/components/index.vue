@@ -12,6 +12,8 @@
           a.btn.btn-success(target='_blank' href='https://github.com/hexschool/w3hexschool-API') 報名API
 
     .container
+      
+      // tab list
       ul.nav.nav-tabs.mt-3
         li.nav-item
           a.nav-link(href='javascript:;' @click="tabType='index'" :class="{'active':tabType=='index'}") 總覽
@@ -21,9 +23,11 @@
           a.nav-link(href='javascript:;' @click="tabType='savedAuthor'" :class="{'active':tabType=='savedAuthor'}") 收藏的挑戰者
         li.nav-item
           a.nav-link(href='javascript:;' @click="tabType='artNum'" :class="{'active':tabType=='artNum'}") 文章數排行
+        li.nav-item
+          a.nav-link(href='javascript:;' @click="tabType='charts'" :class="{'active':tabType=='charts'}") 文章數量統計
 
-      //- <!-- 收藏table -->
-      section.pt-5.savedAuthor(v-if='tabType==\'index\'||tabType==\'savedAuthor\'')
+      // 收藏table
+      section.pt-5.savedAuthor(v-if='tabType=="index"||tabType=="savedAuthor"')
         h3.font-weight-bold.mb-4 收藏的挑戰者
         table.table.table-bordered.table-hover.mt-3.mb-5
           //- <!-- th -->
@@ -45,7 +49,7 @@
                 //  name 
                 a.font-weight-bold(target='_blank' :href='el.blogUrl') {{el.name}}
                 br
-                p(style='font-size:12px;') 已發布
+                p(style='font-size:12px;') 已發布 
                   span.text-danger.font-weight-bold(style='font-size:16px;position:relative;top:1px') {{savedAuthor[idx].blogList.length}}
                   |  篇
 
@@ -127,7 +131,7 @@
         
 
       //  文章數排行 
-      section.pt-5(v-if='tabType==\'artNum\'')
+      section.pt-5(v-if='tabType=="artNum"')
         h3.font-weight-bold 文章數排行
         ul.text-left.mb-5
           li 金角獎 (實體獎座)：成功撰寫滿 
@@ -204,8 +208,13 @@
             
         
         
+      
       .gotop(@click='backToTop') Top
-    
+
+      //- 圖表
+      section.pt-5(v-if='tabType=="charts"')
+        charts(:chartData="BlogData")
+      
     footer
       a.mr-3(href='https://github.com/itsems' target='_blank')
         img(width='30' src='../assets/github.png' alt)
@@ -217,10 +226,14 @@
 <script>
 import axios from "axios";
 
+import charts from "./charts";
+
 export default {
   name: "HelloWorld",
+  components: { charts },
   data() {
     return {
+      name: "emma",
       BlogData: [],
       searchAuthor: "",
       searchBlogList: "",
@@ -228,14 +241,14 @@ export default {
       type: "",
       reverse: false,
       artNum: 0,
-      tabType: "index",
+      tabType: "charts",
       savedAuthor: [],
       updatedSavedAuthor: [],
       rankData: { golden: [], silver: [], brass: [] }
     };
   },
   created() {
-    console.clear();
+    // console.clear();
     axios
       .get(
         "https://raw.githubusercontent.com/hexschool/w3hexschool-API/master/data.json"
@@ -299,6 +312,8 @@ export default {
           item.blogList.reverse();
           this.artNum = this.artNum + item.blogList.length;
         });
+
+        // console.log(this.BlogData.length);
 
         // ranking Data
         var goldNum = 40;
@@ -505,7 +520,7 @@ table ul {
   padding: 0;
   margin-bottom: 0;
 }
-li:not(:last-child) {
+table li:not(:last-child) {
   margin-bottom: 10px;
 }
 a {

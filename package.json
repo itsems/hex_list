@@ -10,8 +10,10 @@
   "dependencies": {
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
+    "chart.js": "^2.9.3",
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
+    "vue-chartjs": "^3.5.0",
     "vue-cli-plugin-pug": "^1.0.7"
   },
   "devDependencies": {
