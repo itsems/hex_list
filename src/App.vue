@@ -1,7 +1,6 @@
-<template>
-  <div id="app">
-    <index></index>
-  </div>
+<template lang="pug">
+  #app
+    index
 </template>
 
 <script>
