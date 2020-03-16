@@ -3,12 +3,12 @@
         h3.font-weight-bold.mb-5 統計
         .chart-zone
             .row.justify-content-around
-              .col-12.col-lg-5
-                h4.font-weight-bold 投稿數量總計
+              .col-6
+                h4.font-weight-bold 挑戰者投稿篇數
                 bar-chart(:chart-data='BarchartData' :options='BarchartOptions')
-              .col-12.col-lg-5
-                h4.font-weight-bold 每月投稿數
-                bar-chart(:chart-data='BarchartData2' :options='BarchartOptions2')
+              //- .col-12.col-lg-5
+              //-   h4.font-weight-bold 每月投稿數
+              //-   bar-chart(:chart-data='BarchartData2' :options='BarchartOptions2')
 
 </template>
 <script>
@@ -66,7 +66,7 @@ export default {
             {
               scaleLabel: {
                 display: true,
-                labelString: "投稿數量"
+                labelString: "挑戰者(位)"
               }
             }
           ]
