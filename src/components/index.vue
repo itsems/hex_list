@@ -23,8 +23,8 @@
           a.nav-link(href='javascript:;' @click="tabType='savedAuthor'" :class="{'active':tabType=='savedAuthor'}") 收藏的挑戰者
         li.nav-item
           a.nav-link(href='javascript:;' @click="tabType='artNum'" :class="{'active':tabType=='artNum'}") 文章數排行
-        li.nav-item
-          a.nav-link(href='javascript:;' @click="tabType='charts'" :class="{'active':tabType=='charts'}") 文章數量統計
+        //- li.nav-item
+        //-   a.nav-link(href='javascript:;' @click="tabType='charts'" :class="{'active':tabType=='charts'}") 文章數量統計
 
       // 收藏table
       section.pt-5.savedAuthor(v-if='tabType=="index"||tabType=="savedAuthor"')
@@ -233,7 +233,6 @@ export default {
   components: { charts },
   data() {
     return {
-      name: "emma",
       BlogData: [],
       searchAuthor: "",
       searchBlogList: "",
@@ -241,14 +240,14 @@ export default {
       type: "",
       reverse: false,
       artNum: 0,
-      tabType: "charts",
+      tabType: "index",
       savedAuthor: [],
       updatedSavedAuthor: [],
       rankData: { golden: [], silver: [], brass: [] }
     };
   },
   created() {
-    // console.clear();
+    console.clear();
     axios
       .get(
         "https://raw.githubusercontent.com/hexschool/w3hexschool-API/master/data.json"
@@ -290,8 +289,10 @@ export default {
           var se = item.updateTime.split(" ");
           var newTimeStr = se[0] + " " + se[2] + " GMT";
           item.updateTime = new Date(newTimeStr);
-          if (se[1] == "下午") {
+          if (se[1] == "下午" && se[2].slice(0, 2) != "12") {
             item.updateTime.addHours(4);
+          } else if (se[1] == "上午" && se[2].slice(0, 2) == "12") {
+            item.updateTime.addHours(-20);
           } else {
             item.updateTime.addHours(-8);
           }

@@ -68,7 +68,7 @@ export default {
           this.arrs[arrsIdx]++;
       }
     });
-    console.log(this.arrs);
+    // console.log(this.arrs);
     this.BarchartData = {
       labels: [
         "1-5",
