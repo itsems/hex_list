@@ -14,7 +14,7 @@
     .container
       
       // tab list
-      ul.nav.nav-tabs.mt-3
+      ul.nav.nav-tabs.mt-4
         li.nav-item
           a.nav-link(href='javascript:;' @click="tabType='index'" :class="{'active':tabType=='index'}") 總覽
         li.nav-item
@@ -23,8 +23,8 @@
           a.nav-link(href='javascript:;' @click="tabType='savedAuthor'" :class="{'active':tabType=='savedAuthor'}") 收藏的挑戰者
         li.nav-item
           a.nav-link(href='javascript:;' @click="tabType='artNum'" :class="{'active':tabType=='artNum'}") 文章數排行
-        //- li.nav-item
-        //-   a.nav-link(href='javascript:;' @click="tabType='charts'" :class="{'active':tabType=='charts'}") 文章數量統計
+        li.nav-item
+          a.nav-link(href='javascript:;' @click="tabType='charts'" :class="{'active':tabType=='charts'}") 統計
 
       // 收藏table
       section.pt-5.savedAuthor(v-if='tabType=="index"||tabType=="savedAuthor"')
@@ -98,12 +98,16 @@
         
         br
         h3.font-weight-bold.mb-4.mt-5 文章總表
-        .info.text-left
-          p 共計挑戰者：{{BlogData.length}}
-          p 共計挑戰文章：{{artNum}}
+        .row.align-items-end
+          .col-6.text-left
+            p 共計挑戰者：{{BlogData.length}}
+            p 共計挑戰文章：{{artNum}}
+          .col-6.text-right
+            p(v-if="searchBlogList||searchAuthor") 搜尋結果共 {{filterBlogData.length}} 筆
 
         //  Result Table 
-        table.table-result.table.table-bordered.table-hover.mt-3
+        p(v-if="!filterBlogData.length>0") 努力加載中...
+        table.table-result.table.table-bordered.table-hover.mt-3(v-if="filterBlogData.length>0")
           tr.thead-light
             th(width='150') 挑戰者
             th 文章列表(由近到遠)
@@ -133,23 +137,21 @@
       //  文章數排行 
       section.pt-5(v-if='tabType=="artNum"')
         h3.font-weight-bold 文章數排行
-        ul.text-left.mb-5
-          li 金角獎 (實體獎座)：成功撰寫滿 
-            span.font-weight-bold 40
-            |  週者均可獲得。
-
-          li 銀角獎 (實體獎座)：成功撰寫滿
-            span.font-weight-bold 25
-            |  週者均可獲得。
-          li 銅角獎 (數位獎狀)：成功撰寫滿
-            span.font-weight-bold 10
-            |  週者均可獲得。
+        p.mt-4.mb-2 金角獎 (實體獎座)：成功撰寫滿 
+          span.font-weight-bold.text-danger 40
+          |  週者均可獲得。
+        p.mb-2 銀角獎 (實體獎座)：成功撰寫滿 
+          span.font-weight-bold.text-danger 25
+          |  週者均可獲得。
+        p.mb-5 銅角獎 (數位獎狀)：成功撰寫滿 
+          span.font-weight-bold.text-danger 10
+          |  週者均可獲得。
 
         .row.justify-content-center
-          .col-4
+          .col-12.col-lg-4
             table.text-center.table.table-bordered
               tr.thead-light
-                th.prize(colspan='3') 金角獎
+                th.prize(colspan='3') 🏆 金角獎 🏆
               tr
                 th 🙌🏻
                 th 挑戰者
@@ -157,39 +159,43 @@
               tbody
                 tr(:key='idxGolden' v-for='(ppl,idxGolden) in rankData.golden')
                   td {{idxGolden+1}}
-                  td.pr-name {{rankData.golden[idxGolden].name}}
+                  td.pr-name
+                    a(:href="rankData.golden[idxGolden].blogUrl") {{rankData.golden[idxGolden].name}}
                   td.pr-num {{rankData.golden[idxGolden].blogList.length}}
                 tr.thead-light
                   th.about(colspan='3') 加油！差一點點！
-                tr(:key='idx +\'-label\'' v-for='(pplClose,idx) in rankData.goldenClose')
+                tr(:key='idx +"-label"' v-for='(pplClose,idx) in rankData.goldenClose')
                   td {{idx+1}}
-                  td {{rankData.goldenClose[idx].name}}
+                  td 
+                    a(:href="rankData.goldenClose[idx].blogUrl", target="_blank") {{rankData.goldenClose[idx].name}}
                   td {{rankData.goldenClose[idx].blogList.length}}
 
-          .col-4
+          .col-12.col-lg-4
             table.text-center.table.table-bordered
               tr.thead-light
-                th.prize(colspan='3') 銀角獎
+                th.prize(colspan='3') 🏆 銀角獎 🏆
               tr
-                th 🙌🏻
+                th 🙌
                 th 挑戰者
                 th 文章數量
               tbody
                 tr(:key='idxSilver' v-for='(ppl,idxSilver) in rankData.silver')
                   td {{idxSilver+1}}
-                  td.pr-name {{rankData.silver[idxSilver].name}}
+                  td.pr-name 
+                    a(:href="rankData.silver[idxSilver].blogUrl", target="_blank") {{rankData.silver[idxSilver].name}}
                   td.pr-num {{rankData.silver[idxSilver].blogList.length}}
                 tr.thead-light
                   th.about(colspan='3') 加油！差一點點！
-                tr(:key='idx +\'-label\'' v-for='(pplClose,idx) in rankData.silverClose')
+                tr(:key='idx +"-label"' v-for='(pplClose,idx) in rankData.silverClose')
                   td {{idx+1}}
-                  td {{rankData.silverClose[idx].name}}
+                  td 
+                    a(:href="rankData.silverClose[idx].blogUrl", target="_blank") {{rankData.silverClose[idx].name}}
                   td {{rankData.silverClose[idx].blogList.length}}
             
-          .col-4(v-if='rankData.brass.length>0')
+          .col-12.col-lg-4(v-if='rankData.brass.length>0')
             table.text-center.table.table-bordered
-              tr.thead-light
-                th.prize(colspan='3') 銅角獎
+              tr.thead-light 
+                th.prize(colspan='3') 🏆 銅角獎 🏆
               tr
                 th 🙌🏻
                 th 挑戰者
@@ -197,13 +203,15 @@
               tbody
                 tr(:key='idxBrass' v-for='(ppl,idxBrass) in rankData.brass')
                   td {{idxBrass+1}}
-                  td.pr-name {{rankData.brass[idxBrass].name}}
+                  td.pr-name
+                    a(:href="rankData.brass[idxBrass].blogUrl", target="_blank") {{rankData.brass[idxBrass].name}}
                   td.pr-num {{rankData.brass[idxBrass].blogList.length}}
                 tr.thead-light
                   th.about(colspan='3') 加油！差一點點！
-                tr(:key='idx +\'-label\'' v-for='(pplClose,idx) in rankData.brassClose')
+                tr(:key='idx +"-label"' v-for='(pplClose,idx) in rankData.brassClose')
                   td {{idx+1}}
-                  td {{rankData.brassClose[idx].name}}
+                  td 
+                    a(:href="rankData.brassClose[idx].blogUrl", target="_blank") {{rankData.brassClose[idx].name}}
                   td {{rankData.brassClose[idx].blogList.length}}
             
         
