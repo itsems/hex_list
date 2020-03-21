@@ -533,7 +533,7 @@ table li:not(:last-child) {
   margin-bottom: 10px;
 }
 a {
-  color: #39af7a;
+  color: #049e5a;
 }
 a:hover {
   color: #f29700;
