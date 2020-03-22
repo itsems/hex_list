@@ -25,8 +25,8 @@
           a.nav-link(href='javascript:;' @click="tabType='articles'" :class="{'active':tabType=='articles'}") 收藏文章
         li.nav-item
           a.nav-link(href='javascript:;' @click="tabType='artNum'" :class="{'active':tabType=='artNum'}") 文章數排行
-        li.nav-item
-          a.nav-link(href='javascript:;' @click="tabType='charts'" :class="{'active':tabType=='charts'}") 統計
+        //- li.nav-item
+        //-   a.nav-link(href='javascript:;' @click="tabType='charts'" :class="{'active':tabType=='charts'}") 統計
 
       // 收藏table
       section.pt-5.savedAuthor(v-if='tabType=="index"||tabType=="savedAuthor"')
@@ -131,7 +131,7 @@
               td.blog-list
                 ul
                   li(:key='idx2List' v-for='(art, idx2List) in filterBlogData[idxFiltered].blogList')
-                    span.badge.badge-info.mr-2(@click="saveTheArt(el.keyID, art.title)") 收藏 
+                    span.saveArt.badge.badge-info.mr-2(@click="saveTheArt(el, art.title, art.url)") 收藏 
                     a(target='_blank' :href='art.url') {{art.title}}
 
 
@@ -262,7 +262,7 @@ export default {
       type: "",
       reverse: false,
       artNum: 0,
-      tabType: "allArt",
+      tabType: "index",
       savedAuthor: [],
       updatedSavedAuthor: [],
       rankData: { golden: [], silver: [], brass: [] },
@@ -283,10 +283,14 @@ export default {
           this.savedAuthor = JSON.parse(localStorage.getItem("MyAuthor"));
         }
 
+        if (localStorage.getItem("MyArticle")) {
+          this.savedArt = JSON.parse(localStorage.getItem("MyArticle"));
+        }
+
         // update saved Author blogList using blogUrl
         for (var z in this.savedAuthor) {
           this.BlogData.filter(el => {
-            if (el.blogUrl == this.savedAuthor[z].blogUrl) {
+            if (el.keyID == this.savedAuthor[z].keyID) {
               this.savedAuthor[z] = el;
             }
           });
@@ -461,10 +465,11 @@ export default {
     addFollow(idx) {
       // check 挑戰者是否已在收藏清單中
       for (var i = 0; i < this.savedAuthor.length; i++) {
-        if (this.savedAuthor[i].key == this.filterBlogData[idx].key) {
+        if (this.savedAuthor[i].keyID == this.filterBlogData[idx].keyID) {
           alert("此挑戰者已在收藏名單中！");
           return;
         }
+
         // if (
         //   this.savedAuthor[i].blogUrl.includes(this.filterBlogData[idx].blogUrl)
         // ) {
@@ -476,6 +481,7 @@ export default {
       // 推進收藏挑戰者ary
       this.savedAuthor.push(this.filterBlogData[idx]);
       localStorage.setItem("MyAuthor", JSON.stringify(this.savedAuthor));
+      alert("已收藏挑戰者！");
 
       this.GetThisWeek();
     },
@@ -490,9 +496,22 @@ export default {
         behavior: "smooth"
       });
     },
-    saveTheArt(id, title) {
-      // this.savedArt.push({ id: id, art: art });
-      console.log(id, title);
+    saveTheArt(el, title, url) {
+      for (var z = 0; z < this.savedArt.length; z++) {
+        if (this.savedArt[z].title == title) {
+          alert("文章已收藏");
+          return;
+        }
+      }
+      var pushEl = {
+        name: el.name,
+        blogUrl: el.blogUrl,
+        title: title,
+        url: url
+      };
+      this.savedArt.push(pushEl);
+      localStorage.setItem("MyArticle", JSON.stringify(this.savedArt));
+      alert("文章已收藏");
     }
   }
 };
@@ -500,8 +519,7 @@ export default {
 
 <style scoped>
 .wrap {
-  font-family: "微軟正黑體",;
-  
+  font-family: "微軟正黑體", "Microsoft JhengHei";
 }
 .banner-zone {
   width: 100%;
@@ -661,5 +679,12 @@ footer {
   100% {
     transform: rotate(180deg);
   }
+}
+.saveArt {
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.saveArt:hover {
+  background-color: #ffc107;
 }
 </style>
