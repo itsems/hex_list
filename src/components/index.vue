@@ -290,7 +290,7 @@ export default {
         // update saved Author blogList using blogUrl
         for (var z in this.savedAuthor) {
           this.BlogData.filter(el => {
-            if (el.keyID == this.savedAuthor[z].keyID) {
+            if (el.blogUrl == this.savedAuthor[z].blogUrl) {
               this.savedAuthor[z] = el;
             }
           });
@@ -465,7 +465,7 @@ export default {
     addFollow(idx) {
       // check 挑戰者是否已在收藏清單中
       for (var i = 0; i < this.savedAuthor.length; i++) {
-        if (this.savedAuthor[i].keyID == this.filterBlogData[idx].keyID) {
+        if (this.savedAuthor[i].blogUrl == this.filterBlogData[idx].blogUrl) {
           alert("此挑戰者已在收藏名單中！");
           return;
         }
