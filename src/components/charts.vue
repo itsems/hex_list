@@ -3,12 +3,14 @@
         h3.font-weight-bold.mb-5 統計
         .chart-zone
             .row.justify-content-around
-              .col-6
+              .col-6.col-lg-5
                 h4.font-weight-bold 挑戰者投稿篇數
+                p 目前總投稿人數：{{this.BlogData.length}}
                 bar-chart(:chart-data='BarchartData' :options='BarchartOptions')
-              //- .col-12.col-lg-5
-              //-   h4.font-weight-bold 每月投稿數
-              //-   bar-chart(:chart-data='BarchartData2' :options='BarchartOptions2')
+              .col-12.col-lg-5
+                h4.font-weight-bold 最後更新
+                p 目前總投稿人數：{{this.BlogData.length}}
+                bar-chart(:chart-data='BarchartData2' :options='BarchartOptions2')
 
 </template>
 <script>
@@ -49,6 +51,10 @@ export default {
         "#84ccc9"
       ],
       BarchartOptions: {
+        title: {
+          display: true,
+          text: "挑戰者已投稿篇數"
+        },
         legend: false,
         animation: {
           animateScale: true
@@ -87,6 +93,10 @@ export default {
         "Dec"
       ],
       BarchartOptions2: {
+        title: {
+          display: true,
+          text: "挑戰者最後更新月"
+        },
         legend: false,
         animation: {
           animateScale: true
@@ -104,7 +114,7 @@ export default {
             {
               scaleLabel: {
                 display: true,
-                labelString: "投稿數量"
+                labelString: "人數"
               }
             }
           ]
@@ -153,7 +163,12 @@ export default {
     });
     this.BarchartData2 = {
       labels: this.BarchartLabels2,
-      datasets: [{ backgroundColor: this.PiechartColors2, data: this.arrsMon }]
+      datasets: [
+        {
+          backgroundColor: this.PiechartColors2,
+          data: this.arrsMon
+        }
+      ]
     };
     console.log(this.arrsMon);
   }

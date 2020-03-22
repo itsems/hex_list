@@ -1,5 +1,5 @@
 <template lang="pug">
-  div
+  div.wrap
     .banner-zone
       .banner
       .bn-txt
@@ -22,9 +22,11 @@
         li.nav-item
           a.nav-link(href='javascript:;' @click="tabType='savedAuthor'" :class="{'active':tabType=='savedAuthor'}") 收藏的挑戰者
         li.nav-item
+          a.nav-link(href='javascript:;' @click="tabType='articles'" :class="{'active':tabType=='articles'}") 收藏文章
+        li.nav-item
           a.nav-link(href='javascript:;' @click="tabType='artNum'" :class="{'active':tabType=='artNum'}") 文章數排行
-        //- li.nav-item
-        //-   a.nav-link(href='javascript:;' @click="tabType='charts'" :class="{'active':tabType=='charts'}") 統計
+        li.nav-item
+          a.nav-link(href='javascript:;' @click="tabType='charts'" :class="{'active':tabType=='charts'}") 統計
 
       // 收藏table
       section.pt-5.savedAuthor(v-if='tabType=="index"||tabType=="savedAuthor"')
@@ -50,7 +52,7 @@
                 a.font-weight-bold(target='_blank' :href='el.blogUrl') {{el.name}}
                 br
                 p(style='font-size:12px;') 已發布 
-                  span.text-danger.font-weight-bold(style='font-size:16px;position:relative;top:1px') {{savedAuthor[idx].blogList.length}}
+                  span.text-danger.font-weight-bold(style='font-size:16px') {{savedAuthor[idx].blogList.length}}
                   |  篇
 
               td
@@ -80,13 +82,13 @@
         table.table.table-bordered.text-center.mt-3
           tr.thead-light
             th
-              p 搜尋作者 : {{searchAuthor}}
+              p 搜尋挑戰者 : {{searchAuthor}}
             th
               p 搜尋標題 : {{searchBlogList}}
           tr
             td
               .input-group
-                input.form-control(@input="searchBlogList='';type='ar'", v-model='searchAuthor' type='text' placeholder='搜尋作者')
+                input.form-control(@input="searchBlogList='';type='ar'", v-model='searchAuthor' type='text' placeholder='搜尋挑戰者')
                 .input-group-append
                   span.input-group-text.cp(@click="searchAuthor=''") Clear
             td
@@ -121,11 +123,18 @@
               //  name 
               td.align-middle.text-center
                 a.font-weight-bold(target='_blank' :href='el.blogUrl') {{el.name}}
+                p(style='font-size:12px;') 已發布 
+                  span.text-danger.font-weight-bold(style='font-size:16px') {{el.blogList.length}}
+                  |  篇
+
               //  blog list 
               td.blog-list
                 ul
                   li(:key='idx2List' v-for='(art, idx2List) in filterBlogData[idxFiltered].blogList')
+                    span.badge.badge-info.mr-2(@click="saveTheArt(el.keyID, art.title)") 收藏 
                     a(target='_blank' :href='art.url') {{art.title}}
+
+
               //  update time 
               td.updateTime {{el.updateTime}}
               //  updated 
@@ -223,6 +232,10 @@
       section.pt-5(v-if='tabType=="charts"')
         charts(:chartData="BlogData")
       
+      //- 收藏文章
+      section.pt-5(v-if='tabType=="articles"')
+        articles(:blogData="BlogData", :savedArt="savedArt")
+      
     footer
       a.mr-3(href='https://github.com/itsems' target='_blank')
         img(width='30' src='../assets/github.png' alt)
@@ -235,10 +248,11 @@
 import axios from "axios";
 
 import charts from "./charts";
+import articles from "./arts";
 
 export default {
   name: "HelloWorld",
-  components: { charts },
+  components: { charts, articles },
   data() {
     return {
       BlogData: [],
@@ -248,10 +262,11 @@ export default {
       type: "",
       reverse: false,
       artNum: 0,
-      tabType: "index",
+      tabType: "allArt",
       savedAuthor: [],
       updatedSavedAuthor: [],
-      rankData: { golden: [], silver: [], brass: [] }
+      rankData: { golden: [], silver: [], brass: [] },
+      savedArt: []
     };
   },
   created() {
@@ -444,24 +459,28 @@ export default {
       }
     },
     addFollow(idx) {
-      // check 作者是否已在收藏清單中
+      // check 挑戰者是否已在收藏清單中
       for (var i = 0; i < this.savedAuthor.length; i++) {
-        if (
-          this.savedAuthor[i].blogUrl.includes(this.filterBlogData[idx].blogUrl)
-        ) {
-          alert("此作者已在收藏名單中！");
+        if (this.savedAuthor[i].key == this.filterBlogData[idx].key) {
+          alert("此挑戰者已在收藏名單中！");
           return;
         }
+        // if (
+        //   this.savedAuthor[i].blogUrl.includes(this.filterBlogData[idx].blogUrl)
+        // ) {
+        //   alert("此挑戰者已在收藏名單中！");
+        //   return;
+        // }
       }
 
-      // 推進收藏作者ary
+      // 推進收藏挑戰者ary
       this.savedAuthor.push(this.filterBlogData[idx]);
       localStorage.setItem("MyAuthor", JSON.stringify(this.savedAuthor));
 
       this.GetThisWeek();
     },
     unfollow(idx) {
-      // 拿掉收藏作者ary
+      // 拿掉收藏挑戰者ary
       this.savedAuthor.splice(idx, 1);
       localStorage.setItem("MyAuthor", JSON.stringify(this.savedAuthor));
     },
@@ -470,12 +489,20 @@ export default {
         top: 0,
         behavior: "smooth"
       });
+    },
+    saveTheArt(id, title) {
+      // this.savedArt.push({ id: id, art: art });
+      console.log(id, title);
     }
   }
 };
 </script>
 
 <style scoped>
+.wrap {
+  font-family: "微軟正黑體",;
+  
+}
 .banner-zone {
   width: 100%;
   height: 400px;
