@@ -31,7 +31,8 @@
       // 收藏table
       section.pt-5.savedAuthor(v-if='tabType=="index"||tabType=="savedAuthor"')
         h3.font-weight-bold.mb-4 收藏的挑戰者
-        table.table.table-bordered.table-hover.mt-3.mb-5
+        p(v-if="!savedAuthor.length>0") 還沒有收藏挑戰者喔！趕快來追蹤喜歡的大神吧！
+        table.table.table-bordered.table-hover.mt-3.mb-5(v-if="savedAuthor.length>0")
           //- <!-- th -->
           tr.thead-light
             th(width='150') 挑戰者

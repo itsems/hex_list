@@ -1,7 +1,8 @@
 <template lang="pug">
     div.wrap
         h3.font-weight-bold.mb-5 收藏文章
-        table.table.table-bordered.table-hover
+        p(v-if="!savedArt.length>0") 還沒有收藏文章喔！試著點擊文章標題前的「收藏」，來建立自己的待讀清單！
+        table.table.table-bordered.table-hover(v-if="savedArt.length>0")
             tr.thead-light
                 th 收藏文章
                 th 挑戰者
