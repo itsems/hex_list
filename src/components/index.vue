@@ -351,7 +351,7 @@ export default {
 
         // 金角
         this.rankData.golden = this.BlogData.filter(item => {
-          return item.blogList.length > goldNum;
+          return item.blogList.length >= goldNum;
         }).sort((a, b) => {
           return b.blogList.length - a.blogList.length;
         });
@@ -366,7 +366,7 @@ export default {
         // 銀角
         this.rankData.silver = this.BlogData.filter(item => {
           return (
-            item.blogList.length > silverNum && item.blogList.length < goldNum
+            item.blogList.length >= silverNum && item.blogList.length < goldNum
           );
         }).sort((a, b) => {
           return b.blogList.length - a.blogList.length;
@@ -384,11 +384,12 @@ export default {
         // 已得銅角
         this.rankData.brass = this.BlogData.filter(item => {
           return (
-            item.blogList.length > brassNum && item.blogList.length < silverNum
+            item.blogList.length >= brassNum && item.blogList.length < silverNum
           );
         }).sort((a, b) => {
           return b.blogList.length - a.blogList.length;
         });
+        // 接近中
         this.rankData.brassClose = this.BlogData.filter(item => {
           return (
             item.blogList.length + 4 > brassNum &&
