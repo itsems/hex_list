@@ -109,7 +109,8 @@
             p(v-if="searchBlogList||searchAuthor") 搜尋結果共 {{filterBlogData.length}} 筆
 
         //  Result Table 
-        p(v-if="!filterBlogData.length>0") 努力加載中...
+        p(v-if="!filterBlogData.length>0&&searchAuthor!==''&&searchBlogList!==''") 努力加載中...
+        p(v-if="(filterBlogData.length==0&&searchAuthor!=='')||(filterBlogData.length==0&&searchBlogList!=='')") 無搜尋結果QQ
         table.table-result.table.table-bordered.table-hover.mt-3(v-if="filterBlogData.length>0")
           tr.thead-light
             th(width='150') 挑戰者
@@ -688,5 +689,9 @@ footer {
 }
 .saveArt:hover {
   background-color: #ffc107;
+}
+
+.artList {
+  min-height: 100vh;
 }
 </style>
