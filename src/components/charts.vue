@@ -8,9 +8,18 @@
                 p 目前總投稿人數：{{this.BlogData.length}}
                 bar-chart(:chart-data='BarchartData' :options='BarchartOptions')
               .col-12.col-lg-5
-                h4.font-weight-bold 最後更新
+                h4.font-weight-bold 最後更新日期
                 p 目前總投稿人數：{{this.BlogData.length}}
-                bar-chart(:chart-data='BarchartData2' :options='BarchartOptions2')
+                bar-chart(:chart-data='PiechartData' :options='PiechartOptions')
+              .col-12.col-lg-5
+                h4.font-weight-bold 多於一周無更新人數：
+                p {{notUpdate}}
+              .col-12.col-lg-5
+                h4.font-weight-bold 仍在更新挑戰者：
+                p {{this.BlogData.length-notUpdate}}
+
+
+
 
 </template>
 <script>
@@ -40,7 +49,7 @@ export default {
           }
         ]
       },
-      PiechartColors: [
+      BarchartColors: [
         "#fef0dc",
         "#fce6c4",
         "#fbd7a1",
@@ -92,7 +101,7 @@ export default {
         "Nov",
         "Dec"
       ],
-      BarchartOptions2: {
+      PiechartOptions: {
         title: {
           display: true,
           text: "挑戰者最後更新月"
@@ -120,7 +129,7 @@ export default {
           ]
         }
       },
-      PiechartColors2: [
+      PiechartColors: [
         "#daf0ef",
         "#c1e5e4",
         "#9dd6d4",
@@ -133,7 +142,8 @@ export default {
         "#fbd7a1",
         "#facd89"
       ],
-      arrsMon: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      arrsMon: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      notUpdate: 0
     };
   },
   created() {
@@ -152,25 +162,48 @@ export default {
     });
     this.BarchartData = {
       labels: this.BarchartLabels,
-      datasets: [{ backgroundColor: this.PiechartColors, data: this.arrs }]
+      datasets: [{ backgroundColor: this.BarchartColors, data: this.arrs }]
     };
 
     this.BlogData.forEach(i => {
       var ut = i.updateTime.split(" ")[0];
       var month = ut.split("/")[1];
-      if (month == 2) this.arrsMon[0]++;
-      else if (month == 3) this.arrsMon[1]++;
+
+      // ex: 最後更新month=2月，更新this.Mon[0]個數字
+      this.arrsMon[month - 2]++;
     });
-    this.BarchartData2 = {
+
+    this.PiechartData = {
       labels: this.BarchartLabels2,
       datasets: [
         {
-          backgroundColor: this.PiechartColors2,
+          backgroundColor: this.PiechartColors,
           data: this.arrsMon
         }
       ]
     };
-    console.log(this.arrsMon);
+
+    this.WhosNotUpdate();
+  },
+  methods: {
+    WhosNotUpdate() {
+      var d = new Date();
+      var nowday = d.getDay();
+      let first = new Date(d.setDate(d.getDate() - nowday - 7)),
+        f_month = "" + (first.getMonth() + 1),
+        f_day = "" + first.getDate(),
+        f_year = first.getFullYear();
+      let FormattedFirstDay = [f_year, f_month, f_day].join("-");
+      let lastWeek = new Date(FormattedFirstDay);
+
+      this.BlogData.forEach(i => {
+        var ut = i.updateTime.split(" ")[0];
+        var month = ut.split("/")[1];
+        var dateOnly = ut.split("/")[2];
+
+        if (month <= f_month && dateOnly < f_day) this.notUpdate++;
+      });
+    }
   }
 };
 </script>
